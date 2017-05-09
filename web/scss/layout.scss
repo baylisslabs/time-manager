@@ -1,0 +1,45 @@
+/* box-sizing reset */
+html {
+    box-sizing: border-box;
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+/* * {
+    //outline: solid 1px red;
+} */
+
+.grid {
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+.row {
+    width: percentage(1);
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.row-centered {
+    width: percentage(1);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+@for $i from 1 through 12 {
+    .col-#{$i} {
+        width: percentage($i/12);
+    }
+}
+
+.image-row  {
+    @extend .row;
+}
+
+.image-row img {
+    height: 100%;
+}
