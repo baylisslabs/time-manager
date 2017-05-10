@@ -1,6 +1,9 @@
 
 import * as express from "express";
 import * as bodyParser from "body-parser";
+import * as path from "path";
+import * as expressLogging from "express-logging";
+import * as logger from "logops";
 
 export class App {
   private app: express.Express;
@@ -11,8 +14,16 @@ export class App {
 
     this.app = express();
 
+    if(process.env.NODE_ENV != "production") {
+      this.app.use(expressLogging(logger));
+    }
+
     this.app.use(bodyParser.json());
-    this.app.use(express.static('dist/www'))
+    this.app.use(express.static(path.resolve(__dirname,"../www")));
+
+    this.app.get('/*', (req,res) => {
+      res.sendFile(path.resolve(__dirname, "../www/index.html"));
+    });
 
     this.configureErrorHandler();
   }
