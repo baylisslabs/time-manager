@@ -5,11 +5,12 @@ import { connect } from "react-redux";
 import MainAppBar from "./mainappbar";
 import { Flex, Box } from "reflexbox";
 
-const Settings = ({history, dispatch}) => (
+/* !!check user role!! */
+const Admin = ({history, dispatch}) => (
      <div>
-        <MainAppBar title="Settings"/>
+        <MainAppBar title="Admin"/>
     </div>
 );
 
-export default withRouter<any>(connect()(Settings));
+export default withRouter<any>(connect()(Admin));
 

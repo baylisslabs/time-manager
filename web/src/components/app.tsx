@@ -11,7 +11,9 @@ import Login from "./login";
 import SignUp from "./signup";
 import Plan from "./plan";
 import Report from "./report";
-import Settings from "./settings";
+import Account from "./account";
+import Preferences from "./preferences";
+import Admin from "./Admin";
 import NoMatch from "./nomatch";
 
 function mapStateToProps(state: State) {
@@ -26,7 +28,9 @@ const App = connect(mapStateToProps)(({ loggedIn }) => loggedIn ? (
                 <Redirect from="/login" to="/" />
                 <Route path="/plan" component={Plan} />
                 <Route path="/report" component={Report} />
-                <Route path="/settings" component={Settings} />
+                <Route path="/preferences" component={Preferences} />
+                <Route path="/account" component={Account} />
+                <Route path="/admin" component={Admin} />
                 <Route component={NoMatch} />
             </Switch>
         </MuiThemeProvider>
@@ -40,7 +44,9 @@ const App = connect(mapStateToProps)(({ loggedIn }) => loggedIn ? (
                 <Route path="/signup" component={SignUp} />
                 <Redirect from="/plan" to="/login?redir=plan" />
                 <Redirect from="/report" to="/login?redir=report" />
-                <Redirect from="/settings" to="/login?redir=settings" />
+                <Redirect from="/preferences" to="/login?redir=preferences" />
+                <Redirect from="/account" to="/login?redir=account" />
+                <Redirect from="/admin" to="/login?redir=admin" />
                 <Route component={NoMatch} />
             </Switch>
         </MuiThemeProvider>
