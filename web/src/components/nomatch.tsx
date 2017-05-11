@@ -1,5 +1,5 @@
 import * as React from "react";
 
-export const NoMatch = () => (
+export default () => (
     <div>no match</div>
 );
