@@ -6,9 +6,14 @@ import { fetchAuth } from "../actions";
 import AppBar from "material-ui/AppBar";
 import IconButton from "material-ui/IconButton";
 import RaisedButton from "material-ui/RaisedButton";
+import FlatButton from "material-ui/FlatButton";
 import Paper from "material-ui/Paper";
-import NavigationClose from "material-ui/svg-icons/navigation/close";
+import Chip from "material-ui/Chip";
 import TextField from "material-ui/TextField";
+import NavigationClose from "material-ui/svg-icons/navigation/close";
+import LinearProgress from 'material-ui/LinearProgress';
+import { red500, white } from "material-ui/styles/colors";
+
 import { Flex, Box } from "reflexbox";
 
 const Login = ({history, dispatch}) => (
@@ -21,17 +26,28 @@ const Login = ({history, dispatch}) => (
         <Flex justify="center" col={12} p={3}>
             <Paper zDepth={2}>
                 <Flex column p={2}>
-                    <p>Please enter your email address and password to login.</p>
+                    <p>Log in to Your Account.</p>
                     <TextField
-                        hintText="Email Address"
-                        floatingLabelText="Email"
+                        hintText="name@domain.me"
+                        floatingLabelText="Email Address"
                         type="text" />
                     <TextField
-                        hintText="Password Field"
+                        hintText="Password"
                         floatingLabelText="Password"
                         type="password" />
                     <Flex justify="center" col={12} pt={3}>
-                        <RaisedButton primary={true} label="LOG IN" onTouchTap={()=>dispatch(fetchAuth("user","1234"))}/>
+                        <Chip backgroundColor={red500} labelColor={white}>Email or password details are invalid</Chip>
+                    </Flex>
+                    <Flex justify="center" col={12} pt={3}>
+                        <LinearProgress mode="indeterminate" />
+                    </Flex>
+                    <Flex justify="center" col={12} pt={3}>
+                        <div>
+                            <RaisedButton primary={true} label="LOG IN" onTouchTap={()=>dispatch(fetchAuth("user","1234"))}/>
+                        </div>
+                    </Flex>
+                    <Flex justify="center" col={12} pt={3}>
+                        <FlatButton primary={true} label="Forgot your password?"/>
                     </Flex>
                 </Flex>
             </Paper>
