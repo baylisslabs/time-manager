@@ -5,6 +5,7 @@ import DatePicker from "material-ui/DatePicker";
 import SelectField from "material-ui/SelectField";
 import MenuItem from "material-ui/MenuItem";
 
+/* todo: bring up from to in modal if custom selection, show date range info in field */
 const Timeframe = () => (
      <div>
         <SelectField
@@ -18,12 +19,12 @@ const Timeframe = () => (
             <MenuItem value={4} primaryText="Last Year" />
             <MenuItem value={5} primaryText="Custom" />
         </SelectField>
-        <DatePicker
+        {/*<DatePicker
             floatingLabelText="From"
         />
         <DatePicker
             floatingLabelText="To"
-        />
+        />*/}
     </div>
 );
 
