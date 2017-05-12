@@ -15,6 +15,7 @@ import Account from "./account";
 import Preferences from "./preferences";
 import Admin from "./Admin";
 import NoMatch from "./nomatch";
+import ModalManager from "./modal/modalManager";
 
 function mapStateToProps(state: State) {
     return { loggedIn: !!state.sessionId }
@@ -23,21 +24,25 @@ function mapStateToProps(state: State) {
 const App = connect(mapStateToProps)(({ loggedIn }) => loggedIn ? (
     <Router>
         <MuiThemeProvider>
-            <Switch>
-                <Route exact path="/" component={Plan} />
-                <Redirect from="/login" to="/" />
-                <Route path="/plan" component={Plan} />
-                <Route path="/report" component={Report} />
-                <Route path="/preferences" component={Preferences} />
-                <Route path="/account" component={Account} />
-                <Route path="/admin" component={Admin} />
-                <Route component={NoMatch} />
-            </Switch>
+            <div>
+                <Switch>
+                    <Route exact path="/" component={Plan} />
+                    <Redirect from="/login" to="/" />
+                    <Route path="/plan" component={Plan} />
+                    <Route path="/report" component={Report} />
+                    <Route path="/preferences" component={Preferences} />
+                    <Route path="/account" component={Account} />
+                    <Route path="/admin" component={Admin} />
+                    <Route component={NoMatch} />
+                </Switch>
+                <ModalManager/>
+            </div>
         </MuiThemeProvider>
     </Router>
 ) : (
     <Router>
         <MuiThemeProvider>
+            <div>
             <Switch>
                 <Route exact path="/" component={Landing} />
                 <Route path="/login" component={Login} />
@@ -49,6 +54,8 @@ const App = connect(mapStateToProps)(({ loggedIn }) => loggedIn ? (
                 <Redirect from="/admin" to="/login?redir=admin" />
                 <Route component={NoMatch} />
             </Switch>
+            <ModalManager/>
+        </div>
         </MuiThemeProvider>
     </Router>
 ));

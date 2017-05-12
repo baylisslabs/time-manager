@@ -1,6 +1,8 @@
 
 import {
   FETCH_AUTH,
+  MODAL_OPEN,
+  MODAL_CLOSE,
   LOG_OUT,
   UPDATE_TIME,
   INIT_SESSION,
@@ -20,6 +22,18 @@ export function timeManagerApp(state = new State(), action: any) {
         });
       }
       break;
+    case MODAL_OPEN:
+      if(!state.modal) {
+        return State.clone(state,{
+          modal: action.name
+        });
+      }
+    case MODAL_CLOSE:
+      if(state.modal===action.name) {
+        return State.clone(state,{
+          modal: null
+        });
+      }
     case LOG_OUT:
       return State.clone(state,{
         sessionId: null

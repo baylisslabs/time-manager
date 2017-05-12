@@ -3,6 +3,8 @@ import * as cookie from "./cookie";
 
 export const INIT_SESSION = "INIT_SESSION";
 export const FETCH_AUTH = "FETCH_AUTH";
+export const MODAL_OPEN = "MODAL_OPEN";
+export const MODAL_CLOSE = "MODAL_CLOSE";
 export const LOG_OUT = "LOG_OUT";
 export const UPDATE_TIME = "UPDATE_TIME";
 
@@ -48,6 +50,21 @@ export function fetchFailed(type: string, error: Error) {
     error
   };
 }
+
+export function modalOpen(name: string) {
+  return {
+    type: MODAL_OPEN,
+    name
+  };
+}
+
+export function modalClose(name: string) {
+  return {
+    type: MODAL_CLOSE,
+    name
+  };
+}
+
 
 export function logOut() {
     return (dispatch: (action) => void) => {

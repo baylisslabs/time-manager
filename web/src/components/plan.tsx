@@ -1,6 +1,7 @@
 import * as React from "react";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
+import { modalOpen } from "../actions";
 
 import MainAppBar from "./mainappbar";
 import Timeframe from "./timeframe";
@@ -19,6 +20,12 @@ import {grey400, darkBlack, lightBlack} from 'material-ui/styles/colors';
 
 import { Flex, Box } from "reflexbox";
 
+import {
+    ADD_TIME_RECORD,
+    EDIT_TIME_RECORD,
+    DELETE_TIME_RECORD
+} from "./modal/modals";
+
 const iconButtonElement = (
   <IconButton
     touch={true}
@@ -29,23 +36,25 @@ const iconButtonElement = (
   </IconButton>
 );
 
-const rightIconMenu = (
-  <IconMenu iconButtonElement={iconButtonElement}>
-    <MenuItem>Edit</MenuItem>
-    <MenuItem>Move</MenuItem>
-    <MenuItem>Delete</MenuItem>
-  </IconMenu>
-);
+const Plan = ({history, dispatch}) => {
+    const rightIconMenu = (
+        <IconMenu iconButtonElement={iconButtonElement}>
+            <MenuItem onTouchTap={()=>dispatch(modalOpen(EDIT_TIME_RECORD))}>Edit</MenuItem>
+            {/*<MenuItem>Move</MenuItem>*/}
+            <MenuItem onTouchTap={()=>dispatch(modalOpen(DELETE_TIME_RECORD))}>Delete</MenuItem>
+        </IconMenu>
+    );
 
-const Plan = ({history, dispatch}) => (
-     <div>
+     return <div>
         <MainAppBar title="Plan"/>
          <Flex column col={12} p={2}>
             <p>Plan upcoming schedule or record your time spent below.</p><br/>
             <Flex p={1} align="center" justify="space-between">
                 <Timeframe />
                 <div>
-                    <FloatingActionButton mini={true}><ContentAdd /></FloatingActionButton>
+                    <FloatingActionButton mini={true} onTouchTap={()=>dispatch(modalOpen(ADD_TIME_RECORD))}>
+                        <ContentAdd />
+                    </FloatingActionButton>
                 </div>
             </Flex>
             <Box p={1}>
@@ -105,8 +114,8 @@ const Plan = ({history, dispatch}) => (
                 </Card>
             </Box>
         </Flex>
-    </div>
-);
+    </div>;
+};
 
 export default withRouter<any>(connect()(Plan));
 

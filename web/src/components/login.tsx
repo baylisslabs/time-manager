@@ -1,7 +1,7 @@
 import * as React from "react";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
-import { fetchAuth } from "../actions";
+import { fetchAuth, modalOpen } from "../actions";
 
 import AppBar from "material-ui/AppBar";
 import IconButton from "material-ui/IconButton";
@@ -16,6 +16,8 @@ import { red500, white } from "material-ui/styles/colors";
 
 import { Flex, Box } from "reflexbox";
 
+import { PASSWORD_RESET } from "./modal/modals";
+
 const Login = ({history, dispatch}) => (
     <div>
         <AppBar
@@ -26,7 +28,7 @@ const Login = ({history, dispatch}) => (
         <Flex justify="center" col={12} p={3}>
             <Paper zDepth={2}>
                 <Flex column p={2}>
-                    <p>Log in to Your Account.</p>
+                    <h2>Log in to Your Account</h2>
                     <TextField
                         hintText="name@domain.me"
                         floatingLabelText="Email Address"
@@ -47,7 +49,7 @@ const Login = ({history, dispatch}) => (
                         </div>
                     </Flex>
                     <Flex justify="center" col={12} pt={3}>
-                        <FlatButton primary={true} label="Forgot your password?"/>
+                        <FlatButton primary={true} label="Forgot your password?" onTouchTap={()=>dispatch(modalOpen(PASSWORD_RESET))}/>
                     </Flex>
                 </Flex>
             </Paper>
