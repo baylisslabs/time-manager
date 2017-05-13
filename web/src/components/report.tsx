@@ -16,12 +16,13 @@ import CircularProgress from 'material-ui/CircularProgress';
 
 import AppBar from "material-ui/AppBar";
 
-
 import MainAppBar from "./mainappbar";
 import Timeframe from "./timeframe";
 import { Flex, Box } from "reflexbox";
 
 import { ERROR_ALERT } from "./modal/modals";
+
+import * as Markdown from "react-markdown";
 
 const Report = ({history, dispatch}) => (
      <div>
@@ -40,38 +41,31 @@ const Report = ({history, dispatch}) => (
 
         </Flex>
         {/* if report data available. todo: no-print style on the print button/whole appbar */}
-         <AppBar
-            title="Daily summary"
+        <AppBar
+            title=""
             showMenuIconButton={true}
             iconElementRight={<FlatButton label="PRINT" onTouchTap={()=>{}}></FlatButton>}
             iconElementLeft={<IconButton onTouchTap={()=>{}}><NavigationClose /></IconButton>} />
 
-        <ul>
-            <li>
-                <ul>
-                    <li>Date: Sat, 2015-05-13</li>
-                    <li>Total time: 9h</li>
-                    <li>Notes:
-                        <ul>
-                            <li>Working on stuff</li>
-                            <li>Save the planet</li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <ul>
-                    <li>Date: Sun, 2015-05-14</li>
-                    <li>Total time: 6.25h</li>
-                    <li>Notes:
-                        <ul>
-                            <li>Working on more stuff</li>
-                            <li>Save the enviroment</li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
-        </ul>
+        <Flex column col={12} p={2}>
+            <Markdown className="markdown-body" skipHtml={true} source={`## Daily Summary Report
+
+__From Sat, 2015-05-13 to Sun, 2015-05-14__
+
+---
+- Date: Sat, 2015-05-13
+- Total time: 9h
+- Notes:
+  - Working on stuff
+  - Save the planet
+---
+- Date: Sun, 2015-05-14
+- Total time: 7h
+- Notes:
+  - Working on stuff
+  - Save the planet *again*
+`} />
+        </Flex>
     </div>
 );
 
