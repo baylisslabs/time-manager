@@ -5,6 +5,7 @@ import {
   MODAL_CLOSE,
   LOG_OUT,
   UPDATE_TIME,
+  UPDATE_FEEDBACK_MSG,
   INIT_SESSION,
   FetchStatus
 } from "./actions";
@@ -41,6 +42,10 @@ export function timeManagerApp(state = new State(), action: any) {
     case UPDATE_TIME:
       return State.clone(state,{
         timeNow: action.timeStamp
+      });
+    case UPDATE_FEEDBACK_MSG:
+      return State.clone(state,{
+        feedbackMsg: action.message
       });
     case INIT_SESSION:
         return State.clone(state,{

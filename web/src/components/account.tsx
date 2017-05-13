@@ -25,6 +25,7 @@ const Account = ({history, dispatch}) => (
             </Flex>
         </Flex>
 
+        {/* Todo -> this button will open a modal similar to password reset which will prompt to send verification email */}
         <Flex column col={12} p={2}>
             <TextField
                 hintText="user@example.com"

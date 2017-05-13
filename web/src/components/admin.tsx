@@ -45,6 +45,7 @@ const Admin = ({history, dispatch}) => (
         <MainAppBar title="Admin"/>
         <Flex column col={12} p={2}>
         <p>Manage users accounts.</p><br/>
+        {/* todo: pagination / scroll / goto */}
         <List>
             <Subheader>Users</Subheader>
             <ListItem

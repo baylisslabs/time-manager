@@ -1,6 +1,7 @@
 import * as React from "react";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
+import { updateFeedbackMsg } from "../actions";
 
 import MainAppBar from "./mainappbar";
 import Divider from "material-ui/Divider";
@@ -9,6 +10,7 @@ import RaisedButton from "material-ui/RaisedButton";
 import Toggle from 'material-ui/Toggle';
 import Avatar from "material-ui/Avatar";
 import AutoComplete from 'material-ui/AutoComplete';
+import CircularProgress from 'material-ui/CircularProgress';
 
 import { Flex, Box } from "reflexbox";
 
@@ -32,13 +34,17 @@ const Preferences = ({history, dispatch}) => (
             <Toggle label="Same for all days" labelPosition="right" />
             {daysOfWeek.map((day) =>
                 <AutoComplete
+                    key={day}
                     hintText="hours i.e 7.25"
                     dataSource={hoursValues}
                     floatingLabelText={day}
                 />)
             }
             <Flex col={12} pt={3}>
-                <RaisedButton primary={true} label="Update Preferences" disabled={true}/>
+                <RaisedButton primary={true} label="Update Preferences" disabled={false} onTouchTap={()=>dispatch(updateFeedbackMsg("Preferences updated successfully"))} />
+            </Flex>
+             <Flex col={12} pt={3}>
+                <RaisedButton primary={true} label="Updating..." labelPosition="before" disabled={true} icon={<CircularProgress size={25}/>}/>
             </Flex>
         </Flex>
     </div>

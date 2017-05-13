@@ -16,6 +16,7 @@ import Preferences from "./preferences";
 import Admin from "./Admin";
 import NoMatch from "./nomatch";
 import ModalManager from "./modal/modalManager";
+import FeedbackMsg from "./feedbackMsg";
 
 function mapStateToProps(state: State) {
     return { loggedIn: !!state.sessionId }
@@ -36,6 +37,7 @@ const App = connect(mapStateToProps)(({ loggedIn }) => loggedIn ? (
                     <Route component={NoMatch} />
                 </Switch>
                 <ModalManager/>
+                <FeedbackMsg/>
             </div>
         </MuiThemeProvider>
     </Router>

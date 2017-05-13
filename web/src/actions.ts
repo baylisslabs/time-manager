@@ -1,12 +1,13 @@
 
 import * as cookie from "./cookie";
 
-export const INIT_SESSION = "INIT_SESSION";
 export const FETCH_AUTH = "FETCH_AUTH";
 export const MODAL_OPEN = "MODAL_OPEN";
 export const MODAL_CLOSE = "MODAL_CLOSE";
 export const LOG_OUT = "LOG_OUT";
 export const UPDATE_TIME = "UPDATE_TIME";
+export const UPDATE_FEEDBACK_MSG = "UPDATE_FEEDBACK_MSG";
+export const INIT_SESSION = "INIT_SESSION";
 
 export enum FetchStatus {
   Begin = 1,
@@ -79,6 +80,13 @@ export function updateTime(timeStamp: number) {
   return {
     type: UPDATE_TIME,
     timeStamp
+  };
+}
+
+export function updateFeedbackMsg(message: string) {
+  return {
+    type: UPDATE_FEEDBACK_MSG,
+    message
   };
 }
 

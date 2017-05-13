@@ -57,6 +57,7 @@ const Plan = ({history, dispatch}) => {
                     </FloatingActionButton>
                 </div>
             </Flex>
+             {/* todo: pagination / scroll / goto */}
             <Box p={1}>
                 <Card>
                     <List>
