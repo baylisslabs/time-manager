@@ -24,20 +24,21 @@ export function timeManagerApp(state = new State(), action: any) {
       }
       break;
     case MODAL_OPEN:
-      if(!state.modal) {
-        return State.clone(state,{
-          modal: action.name
-        });
-      }
+      return State.clone(state,{
+        modal: action.name
+      });
     case MODAL_CLOSE:
       if(state.modal===action.name) {
         return State.clone(state,{
           modal: null
         });
       }
+      break;
     case LOG_OUT:
       return State.clone(state,{
-        sessionId: null
+        sessionId: null,
+        modal: null,
+        feedbackMsg: null
       });
     case UPDATE_TIME:
       return State.clone(state,{

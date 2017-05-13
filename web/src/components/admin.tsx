@@ -1,6 +1,13 @@
 import * as React from "react";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
+import { modalOpen } from "../actions";
+
+import {
+    CHANGE_ROLE,
+    ADMIN_PASSWORD_RESET,
+    DELETE_ACCOUNT
+} from "./modal/modals";
 
 import MainAppBar from "./mainappbar";
 import Timeframe from "./timeframe";
@@ -30,22 +37,23 @@ const iconButtonElement = (
   </IconButton>
 );
 
-/* apply role and only show/disable valid options */
-const rightIconMenu = (
-  <IconMenu iconButtonElement={iconButtonElement}>
-    <MenuItem>Log into Account</MenuItem>
-    <MenuItem>Change Role</MenuItem>
-    <MenuItem>Reset Password</MenuItem>
-    <MenuItem>Delete Account</MenuItem>
-  </IconMenu>
-);
+const Admin = ({history, dispatch}) => {
+    /* apply role and only show/disable valid options */
+    const rightIconMenu = (
+    <IconMenu iconButtonElement={iconButtonElement}>
+        <MenuItem>Log into Account</MenuItem>
+        <MenuItem onTouchTap={()=>dispatch(modalOpen(CHANGE_ROLE))}>Change Role</MenuItem>
+        <MenuItem onTouchTap={()=>dispatch(modalOpen(ADMIN_PASSWORD_RESET))}>Reset Password</MenuItem>
+        <MenuItem onTouchTap={()=>dispatch(modalOpen(DELETE_ACCOUNT))}>Delete Account</MenuItem>
+    </IconMenu>
+    );
 
-const Admin = ({history, dispatch}) => (
+     return (
      <div>
         <MainAppBar title="Admin"/>
         <Flex column col={12} p={2}>
-        <p>Manage users accounts.</p><br/>
-        {/* todo: pagination / scroll / goto */}
+        <p>Manage user's accounts.</p><br/>
+        {/* todo: pagination / scroll / goto / (id self) */}
         <List>
             <Subheader>Users</Subheader>
             <ListItem
@@ -75,8 +83,9 @@ const Admin = ({history, dispatch}) => (
             />
         </List>
         </Flex>
-    </div>
-);
+     </div>
+     );
+};
 
 export default withRouter<any>(connect()(Admin));
 
