@@ -14,6 +14,7 @@ import MenuItem from 'material-ui/MenuItem';
 import Divider from 'material-ui/Divider';
 import Subheader from 'material-ui/Subheader';
 import Avatar from 'material-ui/Avatar';
+import CircularProgress from "material-ui/CircularProgress";
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import {grey400, darkBlack, lightBlack} from 'material-ui/styles/colors';
@@ -48,8 +49,10 @@ const Plan = ({history, dispatch}) => {
      return <div>
         <MainAppBar title="Plan"/>
          <Flex column col={12} p={2}>
-            <p>Plan upcoming schedule or record your time spent below.</p><br/>
-            <Flex p={1} align="center" justify="space-between">
+            <Box pt={1}>
+                <p>Plan upcoming schedule or record your time spent.</p>
+            </Box>
+            <Flex pt={1} align="center" justify="space-between">
                 <Timeframe />
                 <div>
                     <FloatingActionButton mini={true} onTouchTap={()=>dispatch(modalOpen(ADD_TIME_RECORD))}>
@@ -58,7 +61,7 @@ const Plan = ({history, dispatch}) => {
                 </div>
             </Flex>
              {/* todo: pagination / scroll / goto */}
-            <Box p={1}>
+            <Box pt={1}>
                 <Card>
                     <List>
                         <Subheader>Friday, 2017-05-12</Subheader>
@@ -86,7 +89,7 @@ const Plan = ({history, dispatch}) => {
                     </List>
                 </Card>
             </Box>
-            <Box p={1}>
+            <Box pt={1}>
                 <Card>
                     <List>
                         <Subheader>Saturday, 2017-05-13</Subheader>
@@ -110,6 +113,16 @@ const Plan = ({history, dispatch}) => {
                                 </p>
                             }
                             secondaryTextLines={2}
+                        />
+                    </List>
+                </Card>
+            </Box>
+            <Box pt={1}>
+                <Card>
+                    <List>
+                        <Subheader>Sunday, 2017-05-14</Subheader>
+                        <ListItem
+                            leftAvatar={<CircularProgress size={30} />}
                         />
                     </List>
                 </Card>

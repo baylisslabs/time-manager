@@ -10,7 +10,7 @@ import RaisedButton from "material-ui/RaisedButton";
 import Toggle from 'material-ui/Toggle';
 import Avatar from "material-ui/Avatar";
 import AutoComplete from 'material-ui/AutoComplete';
-import CircularProgress from 'material-ui/CircularProgress';
+import CircularProgress from "material-ui/CircularProgress";
 
 import { Flex, Box } from "reflexbox";
 

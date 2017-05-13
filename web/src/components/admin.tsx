@@ -14,6 +14,7 @@ import Timeframe from "./timeframe";
 import {Card} from 'material-ui/Card';
 import {List, ListItem} from 'material-ui/List';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
+import CircularProgress from "material-ui/CircularProgress";
 import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
@@ -80,6 +81,10 @@ const Admin = ({history, dispatch}) => {
                     </p>
                 }
                 secondaryTextLines={2}
+            />
+             <Divider inset={true} />
+            <ListItem
+                leftAvatar={<CircularProgress/>}
             />
         </List>
         </Flex>

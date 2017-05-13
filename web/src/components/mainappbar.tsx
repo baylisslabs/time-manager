@@ -5,15 +5,16 @@ import { logOut } from "../actions";
 
 import AppBar from "material-ui/AppBar";
 import IconButton from "material-ui/IconButton";
-import IconMenu from 'material-ui/IconMenu';
-import MenuItem from 'material-ui/MenuItem';
-import MenuIcon from 'material-ui/svg-icons/navigation/menu';
-import Divider from 'material-ui/Divider';
+import IconMenu from "material-ui/IconMenu";
+import MenuItem from "material-ui/MenuItem";
+import MenuIcon from "material-ui/svg-icons/navigation/menu";
+import { white } from "material-ui/styles/colors";
+import Divider from "material-ui/Divider";
 import { Flex, Box } from "reflexbox";
 
 const LeftMenu = ({ history, dispatch }) => (
     <IconMenu
-      iconButtonElement={<IconButton><MenuIcon /></IconButton>}
+      iconButtonElement={<IconButton iconStyle={{color: white}}><MenuIcon/></IconButton>}
       anchorOrigin={{horizontal: 'left', vertical: 'top'}}
       targetOrigin={{horizontal: 'left', vertical: 'top'}}>
         <MenuItem primaryText="Plan" onTouchTap={()=>history.push("/plan")}/>
