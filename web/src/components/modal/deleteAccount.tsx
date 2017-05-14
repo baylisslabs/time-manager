@@ -1,6 +1,6 @@
 import * as React from "react";
 import { connect } from "react-redux";
-import { modalClose } from "../../actions";
+import { modalClose } from "../../actions/ui";
 
 import Dialog from "material-ui/Dialog";
 import RaisedButton from "material-ui/RaisedButton";
@@ -14,7 +14,7 @@ import { red500, white } from "material-ui/styles/colors";
 
 import { Flex, Box } from "reflexbox";
 
-import { DELETE_ACCOUNT } from "./modals";
+import { ModalKey } from "./keys";
 
 const DeleteAccount = ({dispatch}) => (
         <Dialog
@@ -34,7 +34,7 @@ const DeleteAccount = ({dispatch}) => (
                         <RaisedButton primary={true} label="OK" onTouchTap={()=>{}}/>
                     </div>
                      <div>
-                        <RaisedButton label="CANCEL" onTouchTap={()=>dispatch(modalClose(DELETE_ACCOUNT))}/>
+                        <RaisedButton label="CANCEL" onTouchTap={()=>dispatch(modalClose(ModalKey.DELETE_ACCOUNT))}/>
                     </div>
                 </Flex>
             </Flex>

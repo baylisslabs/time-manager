@@ -1,6 +1,6 @@
 import * as React from "react";
 import { connect } from "react-redux";
-import { modalClose } from "../../actions";
+import { modalClose } from "../../actions/ui";
 
 import Dialog from "material-ui/Dialog";
 import RaisedButton from "material-ui/RaisedButton";
@@ -13,7 +13,7 @@ import { red500, white } from "material-ui/styles/colors";
 
 import { Flex, Box } from "reflexbox";
 
-import { CHANGE_ROLE } from "./modals";
+import { ModalKey } from "./keys";
 
 const items = [
   <MenuItem key={1} value={1} primaryText="Regular" />,
@@ -44,7 +44,7 @@ const ChangeRole = ({dispatch}) => (
                         <RaisedButton primary={true} label="CHANGE" onTouchTap={()=>{}}/>
                     </div>
                      <div>
-                        <RaisedButton label="CANCEL" onTouchTap={()=>dispatch(modalClose(CHANGE_ROLE))}/>
+                        <RaisedButton label="CANCEL" onTouchTap={()=>dispatch(modalClose(ModalKey.CHANGE_ROLE))}/>
                     </div>
                 </Flex>
             </Flex>

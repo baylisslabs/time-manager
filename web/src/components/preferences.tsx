@@ -1,7 +1,7 @@
 import * as React from "react";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
-import { updateFeedbackMsg } from "../actions";
+import { updateFeedbackMsg } from "../actions/ui";
 
 import MainAppBar from "./mainappbar";
 import Divider from "material-ui/Divider";

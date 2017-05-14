@@ -11,33 +11,24 @@ import DeleteAccount from "./deleteAccount";
 import AdminPasswordReset from "./adminPasswordReset";
 import ChangeRole from "./changeRole";
 
-import {
-    PASSWORD_RESET,
-    ADD_TIME_RECORD,
-    EDIT_TIME_RECORD,
-    DELETE_TIME_RECORD,
-    ERROR_ALERT,
-    DELETE_ACCOUNT,
-    ADMIN_PASSWORD_RESET,
-    CHANGE_ROLE
-} from "./modals";
+import { ModalKey } from "./keys";
 
 function mapStateToProps(state: State) {
-    return { modal: state.modal }
+    return { modal: state.ui.modal }
 }
 
-
-const ModalManager = ({modal}) => {
+const ModalManager = (props: { modal: ModalKey} ) => {
+    const { modal } = props;
     switch(modal) {
-        case PASSWORD_RESET: return <PasswordReset/>;
-        case ADD_TIME_RECORD: return <AddTimeRecord/>;
-        case EDIT_TIME_RECORD: return <EditTimeRecord/>;
-        case DELETE_TIME_RECORD: return <DeleteTimeRecord/>;
-        case ERROR_ALERT: return <ErrorAlert/>;
+        case ModalKey.PASSWORD_RESET: return <PasswordReset/>;
+        case ModalKey.ADD_TIME_RECORD: return <AddTimeRecord/>;
+        case ModalKey.EDIT_TIME_RECORD: return <EditTimeRecord/>;
+        case ModalKey.DELETE_TIME_RECORD: return <DeleteTimeRecord/>;
+        case ModalKey.ERROR_ALERT: return <ErrorAlert/>;
         /* admin */
-        case DELETE_ACCOUNT: return <DeleteAccount/>;
-        case ADMIN_PASSWORD_RESET: return <AdminPasswordReset/>;
-        case CHANGE_ROLE: return <ChangeRole/>;
+        case ModalKey.DELETE_ACCOUNT: return <DeleteAccount/>;
+        case ModalKey.ADMIN_PASSWORD_RESET: return <AdminPasswordReset/>;
+        case ModalKey.CHANGE_ROLE: return <ChangeRole/>;
         default: return null;
     }
 };

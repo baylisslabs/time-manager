@@ -1,12 +1,12 @@
 import * as React from "react";
 import { connect } from "react-redux";
 import { State } from "../state";
-import { updateFeedbackMsg } from "../actions";
+import { updateFeedbackMsg } from "../actions/ui";
 
 import Snackbar from "material-ui/Snackbar";
 
 function mapStateToProps(state: State) {
-    return { feedbackMsg: state.feedbackMsg }
+    return { feedbackMsg: state.ui.feedbackMsg }
 }
 
 /* todo: bring up from to in modal if custom selection, show date range info in field */

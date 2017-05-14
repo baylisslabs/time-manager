@@ -19,7 +19,7 @@ import ModalManager from "./modal/modalManager";
 import FeedbackMsg from "./feedbackMsg";
 
 function mapStateToProps(state: State) {
-    return { loggedIn: !!state.sessionId }
+    return { loggedIn: !!state.app.sessionId }
 }
 
 const App = connect(mapStateToProps)(({ loggedIn }) => loggedIn ? (

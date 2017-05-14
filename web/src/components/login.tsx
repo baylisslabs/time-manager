@@ -1,7 +1,9 @@
 import * as React from "react";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
-import { fetchAuth, modalOpen } from "../actions";
+import { modalOpen } from "../actions/ui";
+import { fetchAuth } from "../actions/fetch";
+import { ModalKey } from "./modal/keys";
 
 import AppBar from "material-ui/AppBar";
 import IconButton from "material-ui/IconButton";
@@ -15,8 +17,6 @@ import LinearProgress from 'material-ui/LinearProgress';
 import { red500, white } from "material-ui/styles/colors";
 
 import { Flex, Box } from "reflexbox";
-
-import { PASSWORD_RESET } from "./modal/modals";
 
 const Login = ({history, dispatch}) => (
     <div>
@@ -49,7 +49,7 @@ const Login = ({history, dispatch}) => (
                         </div>
                     </Flex>
                     <Flex justify="center" col={12} pt={3}>
-                        <FlatButton primary={true} label="Forgot your password?" onTouchTap={()=>dispatch(modalOpen(PASSWORD_RESET))}/>
+                        <FlatButton primary={true} label="Forgot your password?" onTouchTap={()=>dispatch(modalOpen(ModalKey.PASSWORD_RESET))}/>
                     </Flex>
                 </Flex>
             </Paper>

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { connect } from "react-redux";
-import { modalClose } from "../../actions";
+import { modalClose } from "../../actions/ui";
 
 import Dialog from "material-ui/Dialog";
 import RaisedButton from "material-ui/RaisedButton";
@@ -11,13 +11,13 @@ import { red500, white } from "material-ui/styles/colors";
 
 import { Flex, Box } from "reflexbox";
 
-import { ADMIN_PASSWORD_RESET } from "./modals";
+import { ModalKey } from "./keys";
 
 const AdminPasswordReset = ({dispatch}) => (
         <Dialog
           modal={false}
           open={true}
-          onRequestClose={()=>dispatch(modalClose(ADMIN_PASSWORD_RESET))}
+          onRequestClose={()=>dispatch(modalClose(ModalKey.ADMIN_PASSWORD_RESET))}
         >
             <Flex column p={2}>
                 <h2>Reset User's Password</h2><br/>

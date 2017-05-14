@@ -1,13 +1,8 @@
 import * as React from "react";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
-import { modalOpen } from "../actions";
-
-import {
-    CHANGE_ROLE,
-    ADMIN_PASSWORD_RESET,
-    DELETE_ACCOUNT
-} from "./modal/modals";
+import { modalOpen } from "../actions/ui";
+import { ModalKey } from "./modal/keys";
 
 import MainAppBar from "./mainappbar";
 import Timeframe from "./timeframe";
@@ -43,9 +38,9 @@ const Admin = ({history, dispatch}) => {
     const rightIconMenu = (
     <IconMenu iconButtonElement={iconButtonElement}>
         <MenuItem>Log into Account</MenuItem>
-        <MenuItem onTouchTap={()=>dispatch(modalOpen(CHANGE_ROLE))}>Change Role</MenuItem>
-        <MenuItem onTouchTap={()=>dispatch(modalOpen(ADMIN_PASSWORD_RESET))}>Reset Password</MenuItem>
-        <MenuItem onTouchTap={()=>dispatch(modalOpen(DELETE_ACCOUNT))}>Delete Account</MenuItem>
+        <MenuItem onTouchTap={()=>dispatch(modalOpen(ModalKey.CHANGE_ROLE))}>Change Role</MenuItem>
+        <MenuItem onTouchTap={()=>dispatch(modalOpen(ModalKey.ADMIN_PASSWORD_RESET))}>Reset Password</MenuItem>
+        <MenuItem onTouchTap={()=>dispatch(modalOpen(ModalKey.DELETE_ACCOUNT))}>Delete Account</MenuItem>
     </IconMenu>
     );
 

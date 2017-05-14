@@ -2,8 +2,8 @@
 import { mount } from "./components/app";
 import * as injectTapEventPlugin from "react-tap-event-plugin";
 import { getStore } from "./store";
-import { initSession, updateTime } from "./actions";
-import * as cookie from "./cookie";
+import { initSession, updateTime } from "./actions/app";
+import * as cookie from "./util/cookie";
 
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941

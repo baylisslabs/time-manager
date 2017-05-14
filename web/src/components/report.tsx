@@ -1,7 +1,8 @@
 import * as React from "react";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
-import { modalOpen } from "../actions";
+import { modalOpen } from "../actions/ui";
+import { ModalKey } from "./modal/keys";
 
 import DatePicker from "material-ui/DatePicker";
 import SelectField from "material-ui/SelectField";
@@ -20,8 +21,6 @@ import MainAppBar from "./mainappbar";
 import Timeframe from "./timeframe";
 import { Flex, Box } from "reflexbox";
 
-import { ERROR_ALERT } from "./modal/modals";
-
 import * as Markdown from "react-markdown";
 
 const Report = ({history, dispatch}) => (
@@ -33,7 +32,7 @@ const Report = ({history, dispatch}) => (
             <p>Select the timeframe for the printable daily summary report.</p><br/>
             <Timeframe />
             <Flex col={12} pt={3}>
-                <RaisedButton primary={true} label="Generate Report" disabled={false} onTouchTap={()=>dispatch(modalOpen(ERROR_ALERT))}/>
+                <RaisedButton primary={true} label="Generate Report" disabled={false} onTouchTap={()=>dispatch(modalOpen(ModalKey.ERROR_ALERT))}/>
             </Flex>
             <Flex col={12} pt={3}>
                 <RaisedButton primary={true} label="Generating..." labelPosition="before" disabled={true} icon={<CircularProgress size={25}/>}/>

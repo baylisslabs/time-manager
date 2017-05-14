@@ -1,7 +1,7 @@
 import * as React from "react";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
-import { logOut } from "../actions";
+import { logOut } from "../actions/app";
 
 import AppBar from "material-ui/AppBar";
 import IconButton from "material-ui/IconButton";

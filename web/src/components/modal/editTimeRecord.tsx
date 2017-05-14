@@ -1,6 +1,6 @@
 import * as React from "react";
 import { connect } from "react-redux";
-import { modalClose } from "../../actions";
+import { modalClose } from "../../actions/ui";
 
 import Dialog from "material-ui/Dialog";
 import RaisedButton from "material-ui/RaisedButton";
@@ -14,7 +14,7 @@ import { red500, white } from "material-ui/styles/colors";
 
 import { Flex, Box } from "reflexbox";
 
-import { EDIT_TIME_RECORD } from "./modals";
+import { ModalKey } from "./keys";
 
 const EditTimeRecord = ({dispatch}) => (
         <Dialog
@@ -48,7 +48,7 @@ const EditTimeRecord = ({dispatch}) => (
                         <RaisedButton primary={true} label="SAVE" onTouchTap={()=>{}}/>
                     </div>
                      <div>
-                        <RaisedButton label="CANCEL" onTouchTap={()=>dispatch(modalClose(EDIT_TIME_RECORD))}/>
+                        <RaisedButton label="CANCEL" onTouchTap={()=>dispatch(modalClose(ModalKey.EDIT_TIME_RECORD))}/>
                     </div>
                 </Flex>
             </Flex>
