@@ -2,6 +2,7 @@
 
 import { Enum } from "typescript-string-enums";
 import { ModalKey } from "../components/modal/keys";
+import { FormActionType, FormAction } from "../components/helpers/formRedux";
 
 export const ActionType = Enum(
     "FETCH",
@@ -9,7 +10,8 @@ export const ActionType = Enum(
     "LOG_OUT",
     "UPDATE_TIME",
     "UPDATE_FEEDBACK_MSG",
-    "INIT_SESSION"
+    "INIT_SESSION",
+    "FORM"
 );
 
 export type ActionType = Enum<typeof ActionType>;
@@ -27,39 +29,45 @@ export type Action =
     | LogOutAction
     | TimeAction
     | FeedbackMsgAction
-    | SessionAction;
+    | SessionAction
+    | RootFormAction;
 
 export interface FetchAction {
-    type: typeof ActionType.FETCH;
-    resource: string;
-    status: FetchStatus;
-    response?: any;
-    error?: Error;
+    readonly type: typeof ActionType.FETCH;
+    readonly resource: string;
+    readonly status: FetchStatus;
+    readonly response?: any;
+    readonly error?: Error;
 }
 
 export interface ModalAction {
-    type: typeof ActionType.MODAL;
-    modalAction: ModalActionType;
-    name: ModalKey;
+    readonly type: typeof ActionType.MODAL;
+    readonly modalAction: ModalActionType;
+    readonly name: ModalKey;
 }
 
 export interface LogOutAction {
-    type: typeof ActionType.LOG_OUT;
+    readonly type: typeof ActionType.LOG_OUT;
 }
 
 export interface TimeAction {
-    type: typeof ActionType.UPDATE_TIME;
-    timeStamp: number;
+    readonly type: typeof ActionType.UPDATE_TIME;
+    readonly timeStamp: number;
 }
 
 export interface FeedbackMsgAction {
-    type: typeof ActionType.UPDATE_FEEDBACK_MSG;
-    message: string;
+    readonly type: typeof ActionType.UPDATE_FEEDBACK_MSG;
+    readonly message: string;
 }
 
 export interface SessionAction {
-    type: typeof ActionType.INIT_SESSION;
-    sessionId: string;
+    readonly type: typeof ActionType.INIT_SESSION;
+    readonly sessionId: string;
+}
+
+export interface RootFormAction {
+    readonly type: typeof ActionType.FORM;
+    readonly formAction: FormAction;
 }
 
 export const FetchStatus = Enum(
