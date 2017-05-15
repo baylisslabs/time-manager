@@ -64,7 +64,6 @@ const Login = (props : LoginProps) => {
     const { history, dispatch, onValidate, busy, formMessage, formValues } = props;
 
     const logInAction = () => {
-        /* extract username & pass */
         if(onValidate()) {
             dispatch(fetchAuth(formValues.email, formValues.password));
         }
