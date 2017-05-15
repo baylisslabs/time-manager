@@ -39,10 +39,14 @@ gulp.task('compile-server', () => {
 
 gulp.task('compile-web', () => {
     let bundler = browserify({
-        debug: config.debug
+        debug: config.debug,
       })
       .add(config.compile.src)
-      .plugin(tsify, { jsx: "react", target: "es5" })
+      .plugin(tsify, {
+           jsx: "react",
+           target: "es5",
+           lib: [ "es5", "es2015.promise", "es2015.core", "es2015.iterable", "dom" ]
+      })
       .transform(envify())
       .bundle()
       .on('error', error => console.error(error.toString()))
