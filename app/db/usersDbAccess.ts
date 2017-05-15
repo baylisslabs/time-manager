@@ -10,7 +10,7 @@ export class UsersDbAccess {
   async get(): Promise<User[]> {
     const collection = await this.usersCollection();
     return new Promise<User[]>((resolve,reject)=>{
-      collection.find({},{ email: 1, role: 1 }).toArray((error,users)=>{
+      collection.find({},{ email: 1, role: 1, name: 1 }).toArray((error,users)=>{
         if(error) {
           reject(error);
         } else {

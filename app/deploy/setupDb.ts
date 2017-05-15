@@ -8,8 +8,9 @@ async function configure() {
 
   let usersCollection = db.collection("users");
   let salt = bcrypt.genSaltSync();
-  usersCollection.createIndex( { userId: 1 }, { unique: true });
+  usersCollection.createIndex( { email: 1 }, { unique: true });
   usersCollection.save({ _id: "1", email: "admin@bayliss-it.com.au", password: bcrypt.hashSync("secret",salt), role: "admin", name: "Administrator" });
+  usersCollection.save({ _id: "2", email: "chris@bayliss-it.com.au", password: bcrypt.hashSync("secret",salt), role: "regular", name: "Chris B" });
 
   db.close();
 }

@@ -32,9 +32,12 @@ export type Action =
     | SessionAction
     | RootFormAction;
 
+export type ResourceId =
+    "AUTH" | "USERS";
+
 export interface FetchAction {
     readonly type: typeof ActionType.FETCH;
-    readonly resource: string;
+    readonly resource: ResourceId;
     readonly status: FetchStatus;
     readonly response?: any;
     readonly error?: Error;

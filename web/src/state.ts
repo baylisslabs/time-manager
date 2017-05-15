@@ -2,6 +2,7 @@
 import { ModalKey } from "./components/modal/keys";
 import { FormMap } from "./components/helpers/formRedux";
 import { Enum } from "typescript-string-enums";
+import { User } from "../../app/model/model";
 
 export class State {
     readonly app: AppState;
@@ -23,8 +24,10 @@ export class AppState {
     }
 }
 
+
 export class DomainState {
-    /* */
+    readonly users: User[];
+
     static clone(source:DomainState, modifers: Partial<DomainState>) {
         return {...source, ...modifers};
     }

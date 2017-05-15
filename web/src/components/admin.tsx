@@ -1,14 +1,18 @@
 import * as React from "react";
-import { withRouter } from "react-router-dom";
-import { connect } from "react-redux";
+import { History } from 'history';
+import { withRouter, Redirect } from "react-router-dom";
+import { connect, Dispatch } from "react-redux";
+import { State, FetchIndicator } from "../state";
+import { Action } from "../actions/types";
+import { fetchUsers } from "../actions/fetch";
 import { modalOpen } from "../actions/ui";
 import { ModalKey } from "./modal/keys";
+import { userFromState } from "../identity";
+import { User,Role } from "../../../app/model/model";
 
 import MainAppBar from "./mainappbar";
-import Timeframe from "./timeframe";
 import {Card} from 'material-ui/Card';
 import {List, ListItem} from 'material-ui/List';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
 import CircularProgress from "material-ui/CircularProgress";
 import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
@@ -22,70 +26,110 @@ import {grey400, darkBlack, lightBlack} from 'material-ui/styles/colors';
 
 import { Flex, Box } from "reflexbox";
 
-/* !!check user role!! */
+interface AdminProps {
+    readonly history: History;
+    readonly dispatch: Dispatch<any>;
+    readonly user: User;
+    readonly userList: User[];
+    readonly loading: boolean;
+    readonly sessionId; string;
+}
+
+function mapStateToProps(state: State, ownProps: AdminProps) {
+    const sessionId = state.app.sessionId;
+    const user = userFromState(state);
+    const fetchState = state.app.fetchState;
+    const loading = (fetchState && fetchState.status == FetchIndicator.InProgress);
+    const userList = state.domain.users || [];
+    return { ...ownProps, user, userList, loading, sessionId };
+}
+
 const iconButtonElement = (
-  <IconButton
-    touch={true}
-    tooltip="more"
-    tooltipPosition="bottom-left"
-  >
-    <MoreVertIcon color={grey400} />
-  </IconButton>
+    <IconButton
+        touch={true}
+        tooltip="more"
+        tooltipPosition="bottom-left"
+    >
+        <MoreVertIcon color={grey400} />
+    </IconButton>
 );
 
-const Admin = ({history, dispatch}) => {
-    /* apply role and only show/disable valid options */
-    const rightIconMenu = (
-    <IconMenu iconButtonElement={iconButtonElement}>
-        <MenuItem>Log into Account</MenuItem>
-        <MenuItem onTouchTap={()=>dispatch(modalOpen(ModalKey.CHANGE_ROLE))}>Change Role</MenuItem>
-        <MenuItem onTouchTap={()=>dispatch(modalOpen(ModalKey.ADMIN_PASSWORD_RESET))}>Reset Password</MenuItem>
-        <MenuItem onTouchTap={()=>dispatch(modalOpen(ModalKey.DELETE_ACCOUNT))}>Delete Account</MenuItem>
-    </IconMenu>
+class Admin extends React.Component<AdminProps,{}> {
+
+    constructor(props: AdminProps) {
+        super(props);
+    }
+
+    componentDidMount() {
+        const {dispatch, sessionId, user, loading} = this.props;
+        if(!loading && (user.role === Role.admin || user.role === Role.userManager)) {
+            dispatch(fetchUsers(sessionId))
+        }
+    }
+
+   /* todo: apply role and only show/disable valid options */
+    readonly rightIconMenu = (
+        <IconMenu iconButtonElement={iconButtonElement}>
+            <MenuItem>Log into Account</MenuItem>
+            <MenuItem onTouchTap={()=>this.props.dispatch(modalOpen(ModalKey.CHANGE_ROLE))}>Change Role</MenuItem>
+            <MenuItem onTouchTap={()=>this.props.dispatch(modalOpen(ModalKey.ADMIN_PASSWORD_RESET))}>Reset Password</MenuItem>
+            <MenuItem onTouchTap={()=>this.props.dispatch(modalOpen(ModalKey.DELETE_ACCOUNT))}>Delete Account</MenuItem>
+        </IconMenu>
     );
 
-     return (
-     <div>
-        <MainAppBar title="Admin"/>
-        <Flex column col={12} p={2}>
-        <p>Manage user's accounts.</p><br/>
-        {/* todo: pagination / scroll / goto / (id self) */}
-        <List>
-            <Subheader>Users</Subheader>
-            <ListItem
-                leftAvatar={<Avatar>C</Avatar>}
-                rightIconButton={rightIconMenu}
-                primaryText="user@domain.com"
-                secondaryText={
-                    <p>
-                    <span style={{color: darkBlack}}>Admin Amy</span><br/>
-                    Admin
-                    </p>
-                }
-                secondaryTextLines={2}
-            />
-            <Divider inset={true} />
-            <ListItem
-                leftAvatar={<Avatar>U</Avatar>}
-                rightIconButton={rightIconMenu}
-                primaryText="ursula@gmail.com"
-                secondaryText={
-                    <p>
-                    <span style={{color: darkBlack}}>User manager Ursula</span><br/>
-                    User Manager
-                    </p>
-                }
-                secondaryTextLines={2}
-            />
-             <Divider inset={true} />
-            <ListItem
-                leftAvatar={<CircularProgress/>}
-            />
-        </List>
-        </Flex>
-     </div>
-     );
-};
+    listItems() {
+        return this.props.userList.map(user=>(
+            <div key={user.email}>
+                <ListItem
+                    leftAvatar={<Avatar>{user.name[0]}</Avatar>}
+                    rightIconButton={this.rightIconMenu}
+                    primaryText={user.email}
+                    secondaryText={
+                        <p>
+                        <span style={{color: darkBlack}}>{user.name}</span><br/>
+                        {user.role}
+                        </p>
+                    }
+                    secondaryTextLines={2}
+                />
+                <Divider inset={true} />
+             </div>
+        ));
+    }
 
-export default withRouter<any>(connect()(Admin));
+    render() {
+        const {history, dispatch, user, userList, loading} = this.props;
+
+        if(user.role != Role.admin && user.role != Role.userManager) {
+            return <Redirect to="/"/>
+        }
+        else {
+            return (
+                <div>
+                    <MainAppBar title="Admin"/>
+                    <Flex column col={12} p={2}>
+                        <p>Manage user's accounts.</p><br/>
+                        {/* todo: pagination / scroll / goto / (id self) */}
+                        {loading ? (
+                            <List>
+                                <Subheader>Users</Subheader>
+                                <ListItem
+                                    leftAvatar={<CircularProgress/>}
+                                />
+                            </List>
+                            ) : (
+                            <List>
+                                <Subheader>Users</Subheader>
+                                {this.listItems()}
+                            </List>
+                            )
+                        }
+                    </Flex>
+                </div>
+            );
+        }
+    }
+}
+
+export default withRouter<any>(connect(mapStateToProps)(Admin));
 

@@ -1,10 +1,10 @@
 import * as cookie from "../util/cookie";
-import * as jwtDecode from "jwt-decode";
 import { User } from "../../../app/model/model";
 import { Action, ActionType, ActionThunk } from "./types";
-import { FetchAction, FetchStatus } from "./types";
+import { FetchAction, FetchStatus, ResourceId } from "./types";
 import { createFormAction } from "./ui";
 import { formInit,formSetMessage } from "../components/helpers/formRedux";
+import { userFromToken } from "../identity";
 
 export function fetchAuth(email: string, password: string): ActionThunk<Action> {
     return (dispatch: (action: Action) => void) => {
@@ -20,12 +20,8 @@ export function fetchAuth(email: string, password: string): ActionThunk<Action> 
         .then(checkResponseStatus)
         .then(parseJSON)
         .then(json => {
-            const decodedToken = jwtDecode(json.token) as User;
             cookie.write("sid",json.token); /* todo: use sid+http-only token technique */
             dispatch(fetchOk("AUTH",{
-                email: decodedToken.email,
-                role: decodedToken.role,
-                name: decodedToken.name,
                 authToken: json.token,
                 sessionId: json.token
             }));
@@ -41,7 +37,24 @@ export function fetchAuth(email: string, password: string): ActionThunk<Action> 
     };
 }
 
-export function fetchBegin(resource: string): FetchAction {
+export function fetchUsers(authToken: string, /* filter ... */): ActionThunk<Action> {
+    return (dispatch: (action) => void) => {
+        dispatch(fetchBegin("USERS"));
+
+        return fetch(`/users`, {
+            headers: {
+                "Authorization": `Bearer ${authToken}`
+            },
+            cache: "no-store"
+        })
+        .then(checkResponseStatus)
+        .then(parseJSON)
+        .then(json => dispatch(fetchOk("USERS", { users: json })))
+        .catch(error => dispatch(fetchFailed("USERS", error)));
+    };
+}
+
+export function fetchBegin(resource: ResourceId): FetchAction {
     return {
         type: ActionType.FETCH,
         resource,
@@ -49,7 +62,7 @@ export function fetchBegin(resource: string): FetchAction {
     };
 }
 
-export function fetchOk(resource: string, response: any): FetchAction {
+export function fetchOk(resource: ResourceId, response: any): FetchAction {
     return {
         type: ActionType.FETCH,
         resource,
@@ -58,7 +71,7 @@ export function fetchOk(resource: string, response: any): FetchAction {
     };
 }
 
-export function fetchFailed(resource: string, error: Error): FetchAction {
+export function fetchFailed(resource: ResourceId, error: Error): FetchAction {
     return {
         type: ActionType.FETCH,
         resource,

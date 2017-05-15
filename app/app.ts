@@ -9,7 +9,7 @@ import * as logger from "logops";
 //import {ActivityDbAccess} from "./db/activityDbAccess";
 import {UsersDbAccess} from "./db/usersDbAccess";
 //import {ActivityApi} from "./api/activityApi";
-//import {UsersApi} from "./api/usersApi";
+import {UsersApi} from "./api/usersApi";
 import {AuthApi} from "./api/authApi";
 import {PermissionDeniedError} from "./model/permissions";
 
@@ -33,20 +33,21 @@ export class App {
     this.app.use(bodyParser.json());
     this.app.use(express.static(path.resolve(__dirname,"../www")));
 
-    this.app.get('/*', (req,res) => {
-      res.sendFile(path.resolve(__dirname, "../www/index.html"));
-    });
-
     /*let activityDb = new ActivityDbAccess();
     let activityApi = new ActivtyApi(activityDb);
     activityApi.mount(this.app,"/users/:email/activities");*/
 
     let usersDb = new UsersDbAccess();
-    /*let usersApi = new UsersApi(usersDb);
-    usersApi.mount(this.app,"/users");*/
+    let usersApi = new UsersApi(usersDb);
+    usersApi.mount(this.app,"/users");
 
     let authApi = new AuthApi(usersDb,this.jwtSecretKey);
     authApi.mount(this.app,"/authentication");
+
+    /* fallback */
+    this.app.get('/*', (req,res) => {
+      res.sendFile(path.resolve(__dirname, "../www/index.html"));
+    });
 
     this.configureErrorHandler();
   }
