@@ -2,6 +2,7 @@ import * as React from "react";
 import { History } from 'history';
 import { withRouter } from "react-router-dom";
 import { connect, Dispatch } from "react-redux";
+import { State, FetchIndicator } from "../state";
 
 import { Action } from "../actions/types";
 import { modalOpen } from "../actions/ui";
@@ -24,10 +25,13 @@ import { Flex, Box } from "reflexbox";
 import { renderTextField, connectForm } from "./helpers/formConnect";
 import { Dict } from "./helpers/dict";
 
-interface RouterConnectProps {
-    history: History;
-    dispatch: Dispatch<Action>;
-    onValidate: () => boolean;
+interface LoginProps {
+    readonly history: History;
+    readonly dispatch: Dispatch<Action>;
+    readonly onValidate: () => boolean;
+    readonly busy: boolean;
+    readonly formMessage: string;
+    readonly formValues: Dict<string>;
 }
 
 const formConfig = {
@@ -47,10 +51,24 @@ function validate(values: Dict<string>): Dict<string> {
     return errors;
 }
 
+function mapStateToProps(state: State, ownProps: LoginProps) {
+    const fetchState = state.app.fetchState;
+    const busy = (fetchState && fetchState.status == FetchIndicator.InProgress);
+
+    return { ...ownProps, busy };
+}
+
 const FormTextField = renderTextField(formConfig);
 
-const Login = (props : RouterConnectProps) => {
-    const { history, dispatch, onValidate } = props;
+const Login = (props : LoginProps) => {
+    const { history, dispatch, onValidate, busy, formMessage, formValues } = props;
+
+    const logInAction = () => {
+        /* extract username & pass */
+        if(onValidate()) {
+            dispatch(fetchAuth(formValues.email, formValues.password));
+        }
+    };
 
     return (
         <div>
@@ -74,14 +92,14 @@ const Login = (props : RouterConnectProps) => {
                             floatingLabelText="Password"
                             type="password" />
                         <Flex justify="center" col={12} pt={3}>
-                            <Chip backgroundColor={red500} labelColor={white}>Email or password details are invalid</Chip>
-                        </Flex>
-                        <Flex justify="center" col={12} pt={3}>
-                            <LinearProgress mode="indeterminate" />
+                            {busy ?
+                                <LinearProgress /> : formMessage ?
+                                    <Chip backgroundColor={red500} labelColor={white}>{formMessage}</Chip> : null
+                            }
                         </Flex>
                         <Flex justify="center" col={12} pt={3}>
                             <div>
-                                <RaisedButton primary={true} label="LOG IN" onTouchTap={()=>onValidate() && dispatch(fetchAuth("user","1234"))}/>
+                                <RaisedButton primary={true} label="LOG IN" disabled={busy} onTouchTap={logInAction}/>
                             </div>
                         </Flex>
                         <Flex justify="center" col={12} pt={3}>
@@ -95,7 +113,9 @@ const Login = (props : RouterConnectProps) => {
 };
 
 export default withRouter<any>(
-    connectForm<RouterConnectProps>(formConfig,Login)
+    connect(mapStateToProps)(
+        connectForm<LoginProps>(formConfig,Login)
+    )
 );
 
 

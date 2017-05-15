@@ -5,7 +5,7 @@ import { FetchAction, FetchStatus } from "../actions/types";
 import { TimeAction } from "../actions/types";
 import { SessionAction } from "../actions/types";
 
-import { AppState } from "../state";
+import { AppState, FetchIndicator } from "../state";
 
 export function appReducer(state = new AppState(), action: Action) {
     switch(action.type) {
@@ -25,10 +25,31 @@ function fetch(state: AppState, action: FetchAction) {
 
 function fetchAuth(state: AppState, action: FetchAction) {
     switch(action.status) {
+        case FetchStatus.Begin:
+            return AppState.clone(state,{
+                fetchState: {
+                    resource: action.resource,
+                    status: FetchIndicator.InProgress,
+                    errorMessage: null
+                }
+            });
         case FetchStatus.Ok:
-          return AppState.clone(state,{
-            sessionId: action.response.sessionId
-        });
+            return AppState.clone(state,{
+                fetchState: {
+                    resource: action.resource,
+                    status: FetchIndicator.Success,
+                    errorMessage: null
+                },
+                sessionId: action.response.sessionId
+            });
+        case FetchStatus.Error:
+            return AppState.clone(state,{
+                fetchState: {
+                    resource: action.resource,
+                    status: FetchIndicator.Error,
+                    errorMessage: action.error.message
+                },
+            });
       }
       return state;
 }

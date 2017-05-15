@@ -12,6 +12,8 @@ import TextField from "material-ui/TextField";
 
 export interface FormProps {
     readonly onValidate: () => boolean;
+    readonly formMessage: string;
+    readonly formValues: Dict<string>;
 }
 
 export interface FormConfig {
@@ -76,19 +78,23 @@ export function connectForm<Props extends FormProps>(
     config: FormConfig,
     WrappedComponent: (props: Props) => JSX.Element) {
         const mapStateToProps = (state : State, ownProps?: Props)  => {
+            let formValues = {};
+            let formMessage = "";
             if(state.ui && state.ui.form) {
                 const formData = state.ui.form[config.formId];
                 if(formData && formData.values) {
-                    const values = formData.values || {};
-                    return { ...(ownProps || {}), values };
+                    formValues = formData.values;
+                }
+                if(formData && formData.message) {
+                    formMessage = formData.message;
                 }
             }
-            return  { ...(ownProps || {}), values: {} };
+            return  { ...(ownProps || {}), formValues, formMessage };
         }
 
         return connect(mapStateToProps)(
-            class WrappedForm extends React.Component<Props & { dispatch: Dispatch<any>, values: Dict<string> },{}> {
-                constructor(props: Props & { dispatch: Dispatch<any>, values: Dict<string> }) {
+            class WrappedForm extends React.Component<Props & { dispatch: Dispatch<any>, formValues: Dict<string>, formMessage: string },{}> {
+                constructor(props: Props & { dispatch: Dispatch<any>, formValues: Dict<string>, formMessage: string }) {
                     super(props);
                 }
 
@@ -110,7 +116,7 @@ export function connectForm<Props extends FormProps>(
 
                 onValidate = () => {
                     if(config.validate) {
-                        const errors = config.validate(this.props.values);
+                        const errors = config.validate(this.props.formValues);
                         this.props.dispatch(
                             createFormAction(
                                 formValidated(config.formId, errors)
@@ -124,6 +130,8 @@ export function connectForm<Props extends FormProps>(
                 render() {
                     return <WrappedComponent
                         onValidate={this.onValidate}
+                        formMessage={this.props.formMessage}
+                        formValues={this.props.formValues}
                         {...this.props}
                     />;
                 }
