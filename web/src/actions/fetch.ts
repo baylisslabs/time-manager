@@ -2,7 +2,7 @@ import * as cookie from "../util/cookie";
 import { User } from "../../../app/model/model";
 import { Action, ActionType, ActionThunk } from "./types";
 import { FetchAction, FetchStatus, ResourceId } from "./types";
-import { createFormAction, modalClose } from "./ui";
+import { createFormAction, modalClose, updateFeedbackMsg } from "./ui";
 import { ModalKey } from "../components/modal/keys";
 import { formInit,formSetMessage } from "../components/helpers/formRedux";
 import { userFromToken } from "../identity";
@@ -73,6 +73,7 @@ export function updateUser(authToken: string, email: string, user: Partial<User>
                 dispatch(modalClose(ui.modalKey));
                 if(ui.modalKey==ModalKey.CHANGE_ROLE) {
                     dispatch(fetchUsers(authToken));
+                    dispatch(updateFeedbackMsg("Role changed successfully"));
                 }
             }
             dispatch(fetchOk("USER_UPDATE", {}));
@@ -101,6 +102,7 @@ export function deleteUser(authToken: string, email: string, ui: { formId: strin
             if(ui && ui.modalKey) {
                 dispatch(modalClose(ui.modalKey));
                 if(ui.modalKey==ModalKey.DELETE_ACCOUNT) {
+                    dispatch(updateFeedbackMsg("User deleted successfully"));
                     dispatch(fetchUsers(authToken));
                 }
             }

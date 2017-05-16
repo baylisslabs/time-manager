@@ -53,13 +53,14 @@ export class User {
     static clone(source:User, modifers: Partial<User>) {
       return { ...source, modifers };
     }
-    static cleanse(user: User) {
-        return user ? new User(
-            cleanseString(user.email),
-            cleanseString(user.password),
-            cleanseString(user.role),
-            cleanseString(user.name),
-            PreferredHours.cleanse(user.preferrredHours)) : user;
+    static cleanse(user: User) : User {
+        return user ? {
+            email: cleanseString(user.email),
+            password: cleanseString(user.password),
+            role: cleanseString(user.role) as Role,
+            name: cleanseString(user.name),
+            preferrredHours: PreferredHours.cleanse(user.preferrredHours)
+        } : user;
     }
 }
 

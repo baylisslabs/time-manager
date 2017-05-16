@@ -67,7 +67,7 @@ const DeleteAccount = (props: DeleteAccountProps) => {
                 </Flex>
                 <Flex justify="space-between" col={12} pt={3}>
                     <div>
-                        <RaisedButton primary={true} label="OK" onTouchTap={changeRoleAction}/>
+                        <RaisedButton primary={true} disabled={busy} label="OK" onTouchTap={changeRoleAction}/>
                     </div>
                      <div>
                         <RaisedButton label="CANCEL" onTouchTap={()=>dispatch(modalClose(ModalKey.DELETE_ACCOUNT))}/>

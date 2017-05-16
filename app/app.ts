@@ -11,6 +11,7 @@ import {UsersDbAccess} from "./db/usersDbAccess";
 //import {ActivityApi} from "./api/activityApi";
 import {UsersApi} from "./api/usersApi";
 import {AuthApi} from "./api/authApi";
+import {IdentityService, UnauthorizedError} from "./service/identityService";
 import {PermissionDeniedError} from "./model/permissions";
 
 
@@ -38,7 +39,8 @@ export class App {
     activityApi.mount(this.app,"/users/:email/activities");*/
 
     let usersDb = new UsersDbAccess();
-    let usersApi = new UsersApi(usersDb);
+    let identityService = new IdentityService(usersDb);
+    let usersApi = new UsersApi(usersDb, identityService);
     usersApi.mount(this.app,"/users");
 
     let authApi = new AuthApi(usersDb,this.jwtSecretKey);
@@ -69,8 +71,7 @@ export class App {
 
   private configureErrorHandler() {
     this.app.use(((err, req, res, next) => {
-      //console.error(err);
-      if (err.name === 'UnauthorizedError') {
+      if (err.name === 'UnauthorizedError' || err instanceof UnauthorizedError) {
         res.status(401).send({ message: err.message });
       } else if (err instanceof PermissionDeniedError) {
         res.status(403).json({ message: err.message });
