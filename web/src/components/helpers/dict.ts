@@ -30,6 +30,10 @@ class DictClass {
     keys<T>(dict: Dict<T>) : string[] {
         return Object.keys(dict);
     }
+
+    contains<T>(dict: Dict<T>, key: string): boolean {
+        return dict.hasOwnProperty(key);
+    }
 }
 
 export const Dict = new DictClass();

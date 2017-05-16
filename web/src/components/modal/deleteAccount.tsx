@@ -1,6 +1,12 @@
 import * as React from "react";
-import { connect } from "react-redux";
+import { connect, Dispatch } from "react-redux";
+import { Enum } from "typescript-string-enums";
+import { State, FetchIndicator } from "../../state";
 import { modalClose } from "../../actions/ui";
+import { deleteUser } from "../../actions/fetch";
+import { User,Role } from "../../../../app/model/model";
+import { ModalKey } from "./keys";
+
 
 import Dialog from "material-ui/Dialog";
 import RaisedButton from "material-ui/RaisedButton";
@@ -14,24 +20,54 @@ import { red500, white } from "material-ui/styles/colors";
 
 import { Flex, Box } from "reflexbox";
 
-import { ModalKey } from "./keys";
+import FormMessage from "./formMessage";
+import { connectSelectField, connectForm } from "../helpers/formConnect";
+import { Dict } from "../helpers/dict";
 
-const DeleteAccount = ({dispatch}) => (
+interface DeleteAccountProps {
+    readonly dispatch: Dispatch<any>;
+    readonly onValidate: () => boolean;
+    readonly formValues: Dict<string>;
+    readonly busy: boolean;
+    readonly sessionId; string;
+    readonly formMessage: string;
+    readonly user: User;
+}
+
+const formConfig = {
+    formId: "deleteAccount"
+};
+
+function mapStateToProps(state: State, ownProps: DeleteAccountProps) {
+    const sessionId = state.app.sessionId;
+    const fetchState = state.app.fetchState;
+    const busy = (fetchState && fetchState.status == FetchIndicator.InProgress);
+    return { ...ownProps, sessionId, busy };
+}
+
+const DeleteAccount = (props: DeleteAccountProps) => {
+    const { dispatch, busy, sessionId, onValidate, formMessage } = props;
+
+    const changeRoleAction = () => {
+        if(onValidate()) {
+            dispatch(deleteUser(sessionId, props.user.email, { formId: formConfig.formId, modalKey: ModalKey.DELETE_ACCOUNT }));
+        }
+    };
+
+    return (
         <Dialog
           modal={true}
           open={true}
         >
             <Flex column p={2}>
                 <h2>Delete this user's account and all their data?</h2><br/>
+                <p>{props.user.name} &lt;{props.user.email}&gt;</p>
                 <Flex justify="center" col={12} pt={3}>
-                    <Chip backgroundColor={red500} labelColor={white}>Something went wrong. Please try again</Chip>
-                </Flex>
-                <Flex justify="center" col={12} pt={3}>
-                    <LinearProgress mode="indeterminate" />
+                    <FormMessage busy={busy} formMessage={formMessage} />
                 </Flex>
                 <Flex justify="space-between" col={12} pt={3}>
                     <div>
-                        <RaisedButton primary={true} label="OK" onTouchTap={()=>{}}/>
+                        <RaisedButton primary={true} label="OK" onTouchTap={changeRoleAction}/>
                     </div>
                      <div>
                         <RaisedButton label="CANCEL" onTouchTap={()=>dispatch(modalClose(ModalKey.DELETE_ACCOUNT))}/>
@@ -39,6 +75,11 @@ const DeleteAccount = ({dispatch}) => (
                 </Flex>
             </Flex>
         </Dialog>
-);
+    );
+};
 
-export default (connect()(DeleteAccount)) as () => JSX.Element;
+export default (
+    connect(mapStateToProps)(
+        connectForm<DeleteAccountProps>(formConfig,DeleteAccount)
+    ) as React.ComponentClass<{ user: User }>
+);

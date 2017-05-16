@@ -1,5 +1,5 @@
 
-import { ModalKey } from "./components/modal/keys";
+import { ModalContext } from "./components/modal/keys";
 import { FormMap } from "./components/helpers/formRedux";
 import { Enum } from "typescript-string-enums";
 import { User } from "../../app/model/model";
@@ -35,7 +35,7 @@ export class DomainState {
 }
 
 export class UiState {
-    readonly modal: ModalKey = null;
+    readonly modal: ModalContext = null;
     readonly feedbackMsg: string = null;
     readonly form: FormMap;
 

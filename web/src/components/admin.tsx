@@ -6,8 +6,8 @@ import { State, FetchIndicator } from "../state";
 import { Action } from "../actions/types";
 import { logInAs } from "../actions/app";
 import { fetchUsers } from "../actions/fetch";
-import { modalOpen } from "../actions/ui";
-import { ModalKey } from "./modal/keys";
+import { modalOpen, modalOpenWithContext } from "../actions/ui";
+import { ModalKey, AdminModal } from "./modal/keys";
 import { userFromState } from "../identity";
 import { User,Role } from "../../../app/model/model";
 
@@ -34,6 +34,7 @@ interface AdminProps {
     readonly userList: User[];
     readonly loading: boolean;
     readonly sessionId; string;
+    readonly isLoggedAsOther: boolean;
 }
 
 function mapStateToProps(state: State, ownProps: AdminProps) {
@@ -42,7 +43,8 @@ function mapStateToProps(state: State, ownProps: AdminProps) {
     const fetchState = state.app.fetchState;
     const loading = (fetchState && fetchState.status == FetchIndicator.InProgress);
     const userList = state.domain.users || [];
-    return { ...ownProps, user, userList, loading, sessionId };
+    const isLoggedAsOther = !!(state.app.loggedInAs);
+    return { ...ownProps, user, userList, loading, sessionId, isLoggedAsOther };
 }
 
 const iconButtonElement = (
@@ -54,6 +56,14 @@ const iconButtonElement = (
         <MoreVertIcon color={grey400} />
     </IconButton>
 );
+
+function mapRole(role: Role) {
+    switch(role) {
+        case Role.admin: return "Admin";
+        case Role.userManager: return "User Manager";
+        case Role.regular: return "Regular";
+    }
+}
 
 class Admin extends React.Component<AdminProps,{}> {
 
@@ -70,14 +80,17 @@ class Admin extends React.Component<AdminProps,{}> {
 
     rightIconMenu = (other: User) => {
         const self = this.props.user;
+        const changeRoleModal: AdminModal = { key: ModalKey.CHANGE_ROLE, user: other };
+        const deleteAccountModal: AdminModal = { key: ModalKey.DELETE_ACCOUNT, user: other };
+        const passwordResetModal: AdminModal = { key: ModalKey.ADMIN_PASSWORD_RESET, user: other };
         if(self.email !== other.email) {
             if(self.role === Role.admin) {
                 return (
                     <IconMenu iconButtonElement={iconButtonElement}>
                         <MenuItem onTouchTap={()=>this.props.dispatch(logInAs(other))}>Log into Account</MenuItem>
-                        <MenuItem onTouchTap={()=>this.props.dispatch(modalOpen(ModalKey.CHANGE_ROLE))}>Change Role</MenuItem>
-                        <MenuItem onTouchTap={()=>this.props.dispatch(modalOpen(ModalKey.ADMIN_PASSWORD_RESET))}>Reset Password</MenuItem>
-                        <MenuItem onTouchTap={()=>this.props.dispatch(modalOpen(ModalKey.DELETE_ACCOUNT))}>Delete Account</MenuItem>
+                        <MenuItem onTouchTap={()=>this.props.dispatch(modalOpenWithContext(changeRoleModal))}>Change Role</MenuItem>
+                        <MenuItem onTouchTap={()=>this.props.dispatch(modalOpenWithContext(passwordResetModal))}>Reset Password</MenuItem>
+                        <MenuItem onTouchTap={()=>this.props.dispatch(modalOpenWithContext(deleteAccountModal))}>Delete Account</MenuItem>
                     </IconMenu>
                 );
             }
@@ -85,8 +98,9 @@ class Admin extends React.Component<AdminProps,{}> {
                 return (
                     <IconMenu iconButtonElement={iconButtonElement}>
                         <MenuItem onTouchTap={()=>this.props.dispatch(logInAs(other))}>Log into Account</MenuItem>
-                        <MenuItem onTouchTap={()=>this.props.dispatch(modalOpen(ModalKey.ADMIN_PASSWORD_RESET))}>Reset Password</MenuItem>
-                        <MenuItem onTouchTap={()=>this.props.dispatch(modalOpen(ModalKey.DELETE_ACCOUNT))}>Delete Account</MenuItem>
+                        <MenuItem onTouchTap={()=>this.props.dispatch(modalOpenWithContext(passwordResetModal))}>Reset Password</MenuItem>
+                        <MenuItem onTouchTap={()=>this.props.dispatch(modalOpenWithContext(deleteAccountModal))}>Delete Account</MenuItem>
+
                     </IconMenu>
                 );
             }
@@ -100,11 +114,11 @@ class Admin extends React.Component<AdminProps,{}> {
                 <ListItem
                     leftAvatar={<Avatar>{other.name[0]}</Avatar>}
                     rightIconButton={this.rightIconMenu(other)}
-                    primaryText={other.email}
+                    primaryText={other.email + ((other.email===this.props.user.email) ? " (this is you)" : "")}
                     secondaryText={
                         <p>
                         <span style={{color: darkBlack}}>{other.name}</span><br/>
-                        {other.role}
+                        {mapRole(other.role)}
                         </p>
                     }
                     secondaryTextLines={2}
@@ -115,9 +129,9 @@ class Admin extends React.Component<AdminProps,{}> {
     }
 
     render() {
-        const {history, dispatch, user, userList, loading} = this.props;
+        const {history, dispatch, user, userList, loading, isLoggedAsOther} = this.props;
 
-        if(user.role != Role.admin && user.role != Role.userManager) {
+        if(isLoggedAsOther || (user.role != Role.admin && user.role != Role.userManager)) {
             return <Redirect to="/"/>
         }
         else {

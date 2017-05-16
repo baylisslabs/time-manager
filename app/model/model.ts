@@ -1,4 +1,5 @@
 import { Enum } from "typescript-string-enums";
+import { cleanseString } from "../util/cleanse";
 
 export class Activity {
     constructor(
@@ -52,6 +53,14 @@ export class User {
     static clone(source:User, modifers: Partial<User>) {
       return { ...source, modifers };
     }
+    static cleanse(user: User) {
+        return user ? new User(
+            cleanseString(user.email),
+            cleanseString(user.password),
+            cleanseString(user.role),
+            cleanseString(user.name),
+            PreferredHours.cleanse(user.preferrredHours)) : user;
+    }
 }
 
 export class PreferredHours {
@@ -68,6 +77,10 @@ export class PreferredHours {
     static clone(source:PreferredHours, modifers: Partial<PreferredHours>) {
       return { ...source, modifers };
     }
+
+    static cleanse(source: PreferredHours) {
+        return source;
+    }
 }
 
 export enum DaysOfWeek {
@@ -79,4 +92,5 @@ export enum DaysOfWeek {
     Saturday,
     Sunday
 }
+
 

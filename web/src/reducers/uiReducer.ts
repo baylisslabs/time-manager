@@ -2,7 +2,7 @@ import { Action, ActionType, ModalActionType } from "../actions/types";
 
 import { FeedbackMsgAction } from "../actions/types";
 import { ModalAction } from "../actions/types";
-import { LogOutAction } from "../actions/types";
+import { LogOutAction,LogInAsAction } from "../actions/types";
 import { RootFormAction } from "../actions/types";
 
 import { UiState } from "../state";
@@ -13,6 +13,7 @@ export function uiReducer(state = new UiState(), action: Action) {
     switch(action.type) {
         case ActionType.MODAL: return modal(state,action);
         case ActionType.LOG_OUT: return logOut(state,action);
+        case ActionType.LOG_IN_AS: return logInAs(state,action);
         case ActionType.UPDATE_FEEDBACK_MSG: return updateFeedbackMsg(state,action);
         case ActionType.FORM: return form(state,action);
         default: return state;
@@ -29,12 +30,12 @@ function modal(state: UiState, action: ModalAction) {
 
 function modalOpen(state: UiState, action: ModalAction) {
     return UiState.clone(state,{
-        modal: action.name
+        modal: action.modal
       });
 }
 
 function modalClose(state: UiState, action: ModalAction) {
-    if(state.modal===action.name) {
+    if(state.modal.key===action.key) {
         return UiState.clone(state,{
           modal: null
         });
@@ -47,6 +48,15 @@ function logOut(state: UiState, action: LogOutAction) {
         modal: null,
         feedbackMsg: null
     });
+}
+
+function logInAs(state: UiState, action: LogInAsAction) {
+    if(action.user) {
+        return UiState.clone(state,{
+            feedbackMsg: `Logged in as ${action.user.name} (${action.user.email})`
+        });
+    }
+    return state;
 }
 
 function updateFeedbackMsg(state: UiState, action: FeedbackMsgAction) {

@@ -1,7 +1,7 @@
 
 
 import { Enum } from "typescript-string-enums";
-import { ModalKey } from "../components/modal/keys";
+import { ModalKey,ModalContext } from "../components/modal/keys";
 import { FormActionType, FormAction } from "../components/helpers/formRedux";
 import { User } from "../../../app/model/model";
 
@@ -36,7 +36,7 @@ export type Action =
     | RootFormAction;
 
 export type ResourceId =
-    "AUTH" | "USERS";
+    "AUTH" | "USERS" | "USER_UPDATE" | "USER_DELETE";
 
 export interface FetchAction {
     readonly type: typeof ActionType.FETCH;
@@ -49,7 +49,8 @@ export interface FetchAction {
 export interface ModalAction {
     readonly type: typeof ActionType.MODAL;
     readonly modalAction: ModalActionType;
-    readonly name: ModalKey;
+    readonly modal: ModalContext;
+    readonly key: ModalKey;
 }
 
 export interface LogOutAction {

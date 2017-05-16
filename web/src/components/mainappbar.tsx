@@ -44,7 +44,7 @@ const LeftMenu = (props: MainAppBarProps) => (
         <MenuItem primaryText="Preferences" onTouchTap={()=>props.history.push("/preferences")}/>
         <MenuItem primaryText="Account" onTouchTap={()=>props.history.push("/account")}/>
         <Divider/>
-        {(props.userRole === Role.admin || props.userRole === Role.userManager) ?
+        {!props.isLoggedAsOther && (props.userRole === Role.admin || props.userRole === Role.userManager) ?
             <div>
                 <MenuItem primaryText="Admin" onTouchTap={()=>props.history.push("/admin")}/>
                 <Divider/>
@@ -54,7 +54,7 @@ const LeftMenu = (props: MainAppBarProps) => (
         {(props.isLoggedAsOther) ?
             <MenuItem primaryText="Close" onTouchTap={()=>{
                 props.history.push("/admin");
-                 props.dispatch(logInAs(null));
+                props.dispatch(logInAs(null));
              }}/> :
             <MenuItem primaryText="Log out" onTouchTap={()=>props.dispatch(logOut())}/>
         }

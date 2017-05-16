@@ -2,7 +2,8 @@ import * as cookie from "../util/cookie";
 import { User } from "../../../app/model/model";
 import { Action, ActionType, ActionThunk } from "./types";
 import { FetchAction, FetchStatus, ResourceId } from "./types";
-import { createFormAction } from "./ui";
+import { createFormAction, modalClose } from "./ui";
+import { ModalKey } from "../components/modal/keys";
 import { formInit,formSetMessage } from "../components/helpers/formRedux";
 import { userFromToken } from "../identity";
 
@@ -10,7 +11,7 @@ export function fetchAuth(email: string, password: string): ActionThunk<Action> 
     return (dispatch: (action: Action) => void) => {
         dispatch(fetchBegin("AUTH"));
 
-        return fetch("/authentication", {
+        fetch("/authentication", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -41,7 +42,7 @@ export function fetchUsers(authToken: string, /* filter ... */): ActionThunk<Act
     return (dispatch: (action) => void) => {
         dispatch(fetchBegin("USERS"));
 
-        return fetch(`/users`, {
+        fetch(`/users`, {
             headers: {
                 "Authorization": `Bearer ${authToken}`
             },
@@ -53,6 +54,67 @@ export function fetchUsers(authToken: string, /* filter ... */): ActionThunk<Act
         .catch(error => dispatch(fetchFailed("USERS", error)));
     };
 }
+
+export function updateUser(authToken: string, email: string, user: Partial<User>, ui: { formId: string, modalKey: ModalKey } ) {
+    return (dispatch: (action) => void) => {
+        dispatch(fetchBegin("USER_UPDATE"));
+
+        fetch(`/users/${encodeURIComponent(email)}`, {
+            method: "PUT",
+            headers: {
+                "Authorization": `Bearer ${authToken}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(user)
+        })
+        .then(checkResponseStatus)
+        .then(() => {
+            if(ui && ui.modalKey) {
+                dispatch(modalClose(ui.modalKey));
+                if(ui.modalKey==ModalKey.CHANGE_ROLE) {
+                    dispatch(fetchUsers(authToken));
+                }
+            }
+            dispatch(fetchOk("USER_UPDATE", {}));
+        })
+        .catch(error => {
+            if(ui && ui.formId) {
+                dispatch(createFormAction(formSetMessage(ui.formId, error.message.toString())));
+            }
+            dispatch(fetchFailed("USER_UPDATE", error))
+        });
+    };
+}
+
+export function deleteUser(authToken: string, email: string, ui: { formId: string, modalKey: ModalKey } ) {
+    return (dispatch: (action) => void) => {
+        dispatch(fetchBegin("USER_DELETE"));
+
+        fetch(`/users/${encodeURIComponent(email)}`, {
+            method: "DELETE",
+            headers: {
+                "Authorization": `Bearer ${authToken}`,
+            }
+        })
+        .then(checkResponseStatus)
+        .then(() => {
+            if(ui && ui.modalKey) {
+                dispatch(modalClose(ui.modalKey));
+                if(ui.modalKey==ModalKey.DELETE_ACCOUNT) {
+                    dispatch(fetchUsers(authToken));
+                }
+            }
+            dispatch(fetchOk("USER_DELETE", {}));
+        })
+        .catch(error => {
+            if(ui && ui.formId) {
+                dispatch(createFormAction(formSetMessage(ui.formId, error.message.toString())));
+            }
+            dispatch(fetchFailed("USER_DELETE", error))
+        });
+    };
+}
+
 
 export function fetchBegin(resource: ResourceId): FetchAction {
     return {

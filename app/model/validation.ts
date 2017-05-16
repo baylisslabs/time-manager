@@ -1,4 +1,5 @@
 import {Activity,ActivityFilter,User,Role} from "./model";
+import has from "../util/has";
 
 export function validateActivity(activity: Activity):void {
     if(!activity) {
@@ -44,14 +45,14 @@ export function validateUserCredential(user: User):void {
   }
 }
 
-export function validateUser(user: User, passwordRequired = true):void {
+export function validateCreateUser(user: User):void {
   if(!user) {
     throw Error("user record must be supplied");
   }
   if(!user.email) {
     throw Error("email must be supplied");
   }
-  if(passwordRequired && !user.password) {
+  if(!user.password) {
     throw Error("password must be supplied");
   }
   if(!user.role) {
@@ -73,4 +74,44 @@ export function validateUser(user: User, passwordRequired = true):void {
       throw Error("password is invalid"); /* todo: ui - rules */
     }
   }
+
+  if(user.preferrredHours) {
+      // todo: validate these too
+  }
 }
+
+export function validateUpdateUser(user: Partial<User>):void {
+  if(!user) {
+    throw Error("user record must be supplied");
+  }
+  if(has(user,"email") && !user.email) {
+    throw Error("email cannot be null");
+  }
+  if(has(user,"password") && !user.password) {
+    throw Error("password cannot be null");
+  }
+  if(has(user,"role") && !user.role) {
+    throw Error("role cannot be null");
+  }
+  if(has(user,"name") && !user.name) {
+    throw Error("name cannot be null");
+  }
+  if(has(user,"role") && (user.role != Role.regular && user.role != Role.userManager && user.role != Role.admin)) {
+      throw Error("role is invalid");
+  }
+
+  /*if(!/^[0-9a-zA-Z]{3,24}$/.test(user.email)) {
+      throw Error("email is invalid");
+  }*/
+
+  if(has(user,"password")) {
+    if(!/^.{8,24}$/.test(user.password)) {
+      throw Error("password is invalid"); /* todo: ui - rules */
+    }
+  }
+
+  if (has(user,"preferrredHours")) {
+      // todo: validate these too
+  }
+}
+

@@ -1,22 +1,33 @@
 import { ActionType, ModalActionType, RootFormAction } from "./types";
 import { FeedbackMsgAction } from "./types";
 import { ModalAction } from "./types";
-import { ModalKey } from "../components/modal/keys";
+import { ModalKey, SimpleModalKey, ModalContext } from "../components/modal/keys";
 import { FormActionType, FormAction } from "../components/helpers/formRedux";
 
-export function modalOpen(name: ModalKey): ModalAction {
+export function modalOpen(key: SimpleModalKey): ModalAction {
     return {
         type: ActionType.MODAL,
         modalAction: ModalActionType.OPEN,
-        name
+        modal : { key },
+        key
     };
 }
 
-export function modalClose(name: ModalKey): ModalAction {
+export function modalOpenWithContext(modal: ModalContext): ModalAction {
+    return {
+        type: ActionType.MODAL,
+        modalAction: ModalActionType.OPEN,
+        modal,
+        key: modal.key
+    };
+}
+
+export function modalClose(key: ModalKey): ModalAction {
     return {
         type: ActionType.MODAL,
         modalAction: ModalActionType.CLOSE,
-        name
+        modal: null,
+        key
     };
 }
 

@@ -21,8 +21,8 @@ import LinearProgress from 'material-ui/LinearProgress';
 import { red500, white } from "material-ui/styles/colors";
 
 import { Flex, Box } from "reflexbox";
-
-import { renderTextField, connectForm } from "./helpers/formConnect";
+import FormMessage from "./modal/formMessage";
+import { connectTextField, connectForm } from "./helpers/formConnect";
 import { Dict } from "./helpers/dict";
 
 interface LoginProps {
@@ -58,7 +58,7 @@ function mapStateToProps(state: State, ownProps: LoginProps) {
     return { ...ownProps, busy };
 }
 
-const FormTextField = renderTextField(formConfig);
+const FormTextField = connectTextField(formConfig);
 
 const Login = (props : LoginProps) => {
     const { history, dispatch, onValidate, busy, formMessage, formValues } = props;
@@ -91,10 +91,7 @@ const Login = (props : LoginProps) => {
                             floatingLabelText="Password"
                             type="password" />
                         <Flex justify="center" col={12} pt={3}>
-                            {busy ?
-                                <LinearProgress /> : formMessage ?
-                                    <Chip backgroundColor={red500} labelColor={white}>{formMessage}</Chip> : null
-                            }
+                            <FormMessage busy={busy} formMessage={formMessage} />
                         </Flex>
                         <Flex justify="center" col={12} pt={3}>
                             <div>
