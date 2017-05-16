@@ -4,7 +4,7 @@ import { Action, ActionType } from "../actions/types";
 import { FetchAction, FetchStatus } from "../actions/types";
 import { TimeAction } from "../actions/types";
 import { SessionAction } from "../actions/types";
-import { LogOutAction } from "../actions/types";
+import { LogOutAction, LogInAsAction } from "../actions/types";
 
 import { AppState, FetchIndicator } from "../state";
 
@@ -12,6 +12,7 @@ export function appReducer(state = new AppState(), action: Action) {
     switch(action.type) {
         case ActionType.FETCH: return fetchResource(fetch(state,action),action);
         case ActionType.LOG_OUT: return logOut(state,action);
+        case ActionType.LOG_IN_AS: return logInAs(state,action);
         case ActionType.UPDATE_TIME: return updateTime(state,action);
         case ActionType.INIT_SESSION: return initSession(state,action);
         default: return state;
@@ -69,6 +70,18 @@ function logOut(state: AppState, action: LogOutAction) {
     return AppState.clone(state,{
         sessionId: null
     });
+}
+
+function logInAs(state: AppState, action: LogInAsAction) {
+    if(state.sessionId) {
+        return AppState.clone(state,{
+            loggedInAs: action.user
+        });
+    } else {
+        return AppState.clone(state,{
+            loggedInAs: null
+        });
+    }
 }
 
 function updateTime(state: AppState, action: TimeAction) {

@@ -16,6 +16,7 @@ export class State {
 
 export class AppState {
     readonly sessionId: string = null;
+    readonly loggedInAs: User;
     readonly timeNow: number = null;
     readonly fetchState: FetchState = null;
 

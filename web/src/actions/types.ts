@@ -3,11 +3,13 @@
 import { Enum } from "typescript-string-enums";
 import { ModalKey } from "../components/modal/keys";
 import { FormActionType, FormAction } from "../components/helpers/formRedux";
+import { User } from "../../../app/model/model";
 
 export const ActionType = Enum(
     "FETCH",
     "MODAL",
     "LOG_OUT",
+    "LOG_IN_AS",
     "UPDATE_TIME",
     "UPDATE_FEEDBACK_MSG",
     "INIT_SESSION",
@@ -27,6 +29,7 @@ export type Action =
     FetchAction
     | ModalAction
     | LogOutAction
+    | LogInAsAction
     | TimeAction
     | FeedbackMsgAction
     | SessionAction
@@ -51,6 +54,11 @@ export interface ModalAction {
 
 export interface LogOutAction {
     readonly type: typeof ActionType.LOG_OUT;
+}
+
+export interface LogInAsAction {
+    readonly type: typeof ActionType.LOG_IN_AS;
+    readonly user: User;
 }
 
 export interface TimeAction {

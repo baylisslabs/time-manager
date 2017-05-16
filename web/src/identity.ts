@@ -7,6 +7,9 @@ export function userFromToken(token: string) : User {
 }
 
 export function userFromState(state: State) : User {
+    if(state.app.loggedInAs && state.app.sessionId) {
+        return state.app.loggedInAs;
+    }
     return jwtDecode(state.app.sessionId) as User;
 }
 

@@ -4,7 +4,7 @@ import { withRouter } from "react-router-dom";
 import { connect, Dispatch } from "react-redux";
 import { State } from "../state";
 import { Action } from "../actions/types";
-import { logOut } from "../actions/app";
+import { logOut, logInAs } from "../actions/app";
 import { userFromState } from "../identity";
 import { Role } from "../../../app/model/model";
 
@@ -13,7 +13,7 @@ import IconButton from "material-ui/IconButton";
 import IconMenu from "material-ui/IconMenu";
 import MenuItem from "material-ui/MenuItem";
 import MenuIcon from "material-ui/svg-icons/navigation/menu";
-import { white } from "material-ui/styles/colors";
+import { white, red400 } from "material-ui/styles/colors";
 import Divider from "material-ui/Divider";
 import { Flex, Box } from "reflexbox";
 
@@ -23,12 +23,14 @@ interface MainAppBarProps {
     readonly dispatch: Dispatch<Action>;
     readonly title: string;
     readonly userRole: Role;
+    readonly isLoggedAsOther: boolean;
 }
 
 function mapStateToProps(state: State, ownProps: MainAppBarProps) {
     const user = userFromState(state);
     const userRole = user.role;
-    return { ...ownProps, userRole };
+    const isLoggedAsOther = !!(state.app.loggedInAs);
+    return { ...ownProps, userRole, isLoggedAsOther };
 }
 
 const LeftMenu = (props: MainAppBarProps) => (
@@ -49,7 +51,13 @@ const LeftMenu = (props: MainAppBarProps) => (
             </div>
             : null
         }
-        <MenuItem primaryText="Log out" onTouchTap={()=>props.dispatch(logOut())}/>
+        {(props.isLoggedAsOther) ?
+            <MenuItem primaryText="Close" onTouchTap={()=>{
+                props.history.push("/admin");
+                 props.dispatch(logInAs(null));
+             }}/> :
+            <MenuItem primaryText="Log out" onTouchTap={()=>props.dispatch(logOut())}/>
+        }
     </IconMenu>
 );
 
@@ -62,6 +70,7 @@ const MainAppBar = (props: MainAppBarProps) => (
                 {...props}
             />
         }
+        style={ props.isLoggedAsOther ? { backgroundColor: red400 } : { } }
     />
 );
 

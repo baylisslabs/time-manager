@@ -4,6 +4,7 @@ import { withRouter, Redirect } from "react-router-dom";
 import { connect, Dispatch } from "react-redux";
 import { State, FetchIndicator } from "../state";
 import { Action } from "../actions/types";
+import { logInAs } from "../actions/app";
 import { fetchUsers } from "../actions/fetch";
 import { modalOpen } from "../actions/ui";
 import { ModalKey } from "./modal/keys";
@@ -67,27 +68,43 @@ class Admin extends React.Component<AdminProps,{}> {
         }
     }
 
-   /* todo: apply role and only show/disable valid options */
-    readonly rightIconMenu = (
-        <IconMenu iconButtonElement={iconButtonElement}>
-            <MenuItem>Log into Account</MenuItem>
-            <MenuItem onTouchTap={()=>this.props.dispatch(modalOpen(ModalKey.CHANGE_ROLE))}>Change Role</MenuItem>
-            <MenuItem onTouchTap={()=>this.props.dispatch(modalOpen(ModalKey.ADMIN_PASSWORD_RESET))}>Reset Password</MenuItem>
-            <MenuItem onTouchTap={()=>this.props.dispatch(modalOpen(ModalKey.DELETE_ACCOUNT))}>Delete Account</MenuItem>
-        </IconMenu>
-    );
+    rightIconMenu = (other: User) => {
+        const self = this.props.user;
+        if(self.email !== other.email) {
+            if(self.role === Role.admin) {
+                return (
+                    <IconMenu iconButtonElement={iconButtonElement}>
+                        <MenuItem onTouchTap={()=>this.props.dispatch(logInAs(other))}>Log into Account</MenuItem>
+                        <MenuItem onTouchTap={()=>this.props.dispatch(modalOpen(ModalKey.CHANGE_ROLE))}>Change Role</MenuItem>
+                        <MenuItem onTouchTap={()=>this.props.dispatch(modalOpen(ModalKey.ADMIN_PASSWORD_RESET))}>Reset Password</MenuItem>
+                        <MenuItem onTouchTap={()=>this.props.dispatch(modalOpen(ModalKey.DELETE_ACCOUNT))}>Delete Account</MenuItem>
+                    </IconMenu>
+                );
+            }
+            if(self.role === Role.userManager && other.role == Role.regular) {
+                return (
+                    <IconMenu iconButtonElement={iconButtonElement}>
+                        <MenuItem onTouchTap={()=>this.props.dispatch(logInAs(other))}>Log into Account</MenuItem>
+                        <MenuItem onTouchTap={()=>this.props.dispatch(modalOpen(ModalKey.ADMIN_PASSWORD_RESET))}>Reset Password</MenuItem>
+                        <MenuItem onTouchTap={()=>this.props.dispatch(modalOpen(ModalKey.DELETE_ACCOUNT))}>Delete Account</MenuItem>
+                    </IconMenu>
+                );
+            }
+        }
+        return null;
+    };
 
     listItems() {
-        return this.props.userList.map(user=>(
-            <div key={user.email}>
+        return this.props.userList.map(other=>(
+            <div key={other.email}>
                 <ListItem
-                    leftAvatar={<Avatar>{user.name[0]}</Avatar>}
-                    rightIconButton={this.rightIconMenu}
-                    primaryText={user.email}
+                    leftAvatar={<Avatar>{other.name[0]}</Avatar>}
+                    rightIconButton={this.rightIconMenu(other)}
+                    primaryText={other.email}
                     secondaryText={
                         <p>
-                        <span style={{color: darkBlack}}>{user.name}</span><br/>
-                        {user.role}
+                        <span style={{color: darkBlack}}>{other.name}</span><br/>
+                        {other.role}
                         </p>
                     }
                     secondaryTextLines={2}
